@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["sonex"],
+  "cSpell.words": ["hugeicons", "sonex", "tauri", "ultracite"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,

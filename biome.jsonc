@@ -4,7 +4,7 @@
   "linter": {
     "rules": {
       "style": {
-        "useFilenamingConvention": "warn"
+        "useFilenamingConvention": "info"
       }
     }
   }
