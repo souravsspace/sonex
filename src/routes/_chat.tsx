@@ -18,24 +18,41 @@ export const Route = createFileRoute("/_chat")({
 function TopBar({ threadId }: { threadId?: string }) {
   const { state } = useSidebar();
   return (
-    <div className="flex items-center gap-2 px-2 pt-9 pb-3">
+    <>
+      {/* Blur gradient overlay for top - ends right after TopBar */}
       <div
-        className="overflow-hidden transition-all duration-200 ease-linear"
+        className="pointer-events-none absolute top-0 right-0 left-0 z-[9] h-24 backdrop-blur-xl"
         style={{
-          maxWidth: state === "expanded" ? 0 : 32,
-          opacity: state === "expanded" ? 0 : 1,
-          pointerEvents: state === "expanded" ? "none" : "auto",
+          maskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 5%, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.85) 15%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.75) 25%, rgba(0,0,0,0.7) 30%, rgba(0,0,0,0.65) 35%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0.1) 90%, rgba(0,0,0,0.05) 95%, rgba(0,0,0,0) 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 5%, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.85) 15%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.75) 25%, rgba(0,0,0,0.7) 30%, rgba(0,0,0,0.65) 35%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0.1) 90%, rgba(0,0,0,0.05) 95%, rgba(0,0,0,0) 100%)",
         }}
-      >
-        <SidebarTrigger className="h-6 w-6 shrink-0" />
+      />
+
+      {/* TopBar content */}
+      <div className="pointer-events-none absolute top-0 left-0 z-10">
+        <div className="pointer-events-auto pt-9">
+          <div className="mb-3 ml-4 flex w-fit items-center gap-2 rounded-lg border border-border/40 bg-muted/40 px-3 py-1 backdrop-blur-xl dark:border-border/30 dark:bg-muted/20">
+            <div
+              className="overflow-hidden transition-all duration-200 ease-linear"
+              style={{
+                maxWidth: state === "expanded" ? 0 : 32,
+                opacity: state === "expanded" ? 0 : 1,
+                pointerEvents: state === "expanded" ? "none" : "auto",
+              }}
+            >
+              <SidebarTrigger className="h-6 w-6 shrink-0" />
+            </div>
+            {threadId && (
+              <span className="font-mono text-muted-foreground text-xs">
+                Thread: {threadId}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
-      {threadId && (
-        // FIXME: hidden for now!
-        <p className="hidden truncate font-mono text-muted-foreground text-xs">
-          Thread: {threadId}
-        </p>
-      )}
-    </div>
+    </>
   );
 }
 
@@ -50,9 +67,11 @@ function ChatLayout() {
   return (
     <SidebarProvider className="h-full overflow-hidden">
       <PlanSidebar activeThreadId={threadId} />
-      <SidebarInset className="flex min-h-0 flex-col overflow-hidden">
+      <SidebarInset className="relative flex min-h-0 flex-col overflow-hidden">
         <TopBar threadId={threadId} />
-        <Outlet />
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

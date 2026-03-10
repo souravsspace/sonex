@@ -24,9 +24,10 @@ function ToastItem({
 }) {
   const typeStyles = {
     success:
-      "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400",
-    error: "border-destructive/30 bg-destructive/10 text-destructive",
-    info: "border-border bg-background text-foreground",
+      "border-green-500/30 bg-green-500/10 backdrop-blur-xl text-green-700 dark:text-green-400",
+    error:
+      "border-destructive/30 bg-destructive/10 backdrop-blur-xl text-destructive",
+    info: "border-border/30 bg-background/80 backdrop-blur-xl text-foreground dark:border-border/20 dark:bg-background/60",
   } as const;
 
   return (

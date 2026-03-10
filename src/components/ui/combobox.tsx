@@ -64,7 +64,7 @@ function Combobox({
         />
       </Button>
       {open && (
-        <div className="absolute top-full z-50 mt-1 w-full rounded-lg border bg-popover shadow-md">
+        <div className="absolute top-full z-50 mt-1 w-full rounded-lg border-border/30 bg-popover/80 shadow-lg backdrop-blur-xl dark:border-border/20 dark:bg-popover/60">
           <Command>
             <CommandInput placeholder={searchPlaceholder} />
             <CommandList>

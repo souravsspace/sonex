@@ -1,4 +1,4 @@
-import associations from "@/vscode-icons.json";
+import associations from "./vscode-icons.json";
 
 interface IconEntry {
   color: string;
