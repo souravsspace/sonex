@@ -1,5 +1,6 @@
 // Sonex - Tauri application with IPC bridge
 mod ipc;
+pub mod db;
 
 use ipc::commands::AppState;
 use tauri::Manager;

@@ -1,4 +1,4 @@
-use sqlx::{PgPool, postgres::PgPoolOptions};
+use sqlx::PgPool;
 use tracing::{info, error};
 
 use crate::db::error::DbError;
@@ -26,7 +26,7 @@ pub async fn run_migrations(pool: &PgPool) -> Result<(), DbError> {
 /// Check the status of database migrations
 /// 
 /// Returns information about which migrations have been applied
-pub async fn check_migration_status(pool: &PgPool) -> Result<Vec<MigrationInfo>, DbError> {
+pub async fn check_migration_status(_pool: &PgPool) -> Result<Vec<MigrationInfo>, DbError> {
     info!("Checking migration status...");
     
     let migrations = sqlx::migrate!("./migrations")
@@ -34,11 +34,13 @@ pub async fn check_migration_status(pool: &PgPool) -> Result<Vec<MigrationInfo>,
     
     let mut result = Vec::new();
     
-    for migration in migrations {
+    for migration in migrations.iter() {
         result.push(MigrationInfo {
             version: migration.version,
             description: migration.description.to_string(),
-            checksum: format!("{:x}", migration.checksum),
+            checksum: migration.checksum.iter()
+                .map(|b| format!("{:02x}", b))
+                .collect::<String>(),
         });
     }
     
