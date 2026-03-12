@@ -277,15 +277,39 @@ src-tauri/src/
 
 ---
 
-### E. Attachment Management
+### E. Attachment Management (MinIO S3-Compatible Storage)
 
 **E1. Attachment Storage Strategy**
-- Store attachments in dedicated directory: `{workspace_root}/.sonex/attachments/`
+- Use MinIO for S3-compatible object storage
 - Generate unique IDs for each attachment (UUID v4)
 - Store metadata in `projection_thread_message_attachments` table
-- Store actual files in: `.sonex/attachments/{thread_id}/{attachment_id}.{ext}`
+- Store actual files in MinIO buckets:
+  - Bucket: `sonex-attachments`
+  - Path structure: `{thread_id}/{attachment_id}.{ext}`
+- Configure MinIO endpoint, access key, and secret key via environment variables
 
-**E2. Image Processing**
+**E2. MinIO Integration**
+
+**Function: `init_minio_client`**
+- Create MinIO client with endpoint, access key, secret key
+- Test connection on startup
+- Create buckets if they don't exist (sonex-attachments, sonex-thumbnails)
+- Set bucket policies (private by default)
+
+**Function: `upload_to_minio`**
+- Input: bucket, object_key, file_data, content_type
+- Upload file to MinIO bucket
+- Set metadata (original filename, upload timestamp)
+- Return object URL/key
+- Use multipart upload for large files (>5MB)
+
+**Function: `download_from_minio`**
+- Input: bucket, object_key
+- Download file from MinIO
+- Return file data as bytes
+- Cache frequently accessed files
+
+**E3. Image Processing**
 
 **Function: `process_image_attachment`**
 - Input: workspace_root, image_file_path, thread_id, message_id
@@ -293,33 +317,28 @@ src-tauri/src/
 - Detect MIME type: `image/jpeg`, `image/png`, `image/gif`, `image/webp`
 - Validate MIME type (whitelist allowed types)
 - Generate thumbnail (use `image` crate)
-- Store original and thumbnail
+- Upload original to MinIO bucket `sonex-attachments`
+- Upload thumbnail to MinIO bucket `sonex-thumbnails`
 - Calculate file hash (SHA-256) for deduplication
-- Insert metadata into database
-- Return attachment_id and URLs
+- Insert metadata into database (with MinIO object keys)
+- Return attachment_id and MinIO object URLs
 
-**E3. Base64 Encoding**
+**E4. Base64 Encoding**
 
 **Function: `get_attachment_as_base64`**
 - Input: attachment_id
-- Query database for attachment metadata
-- Read file from disk
+- Query database for attachment metadata (get MinIO object key)
+- Download file from MinIO
 - Encode as base64
 - Return: `data:{mime_type};base64,{encoded_data}`
 - Cache encoded data in memory (LRU cache)
 
-**E4. Attachment Types**
+**E5. Attachment Types**
 Support these attachment types:
 - Images: JPEG, PNG, GIF, WebP, SVG
 - Documents: PDF (render first page as thumbnail)
 - Code snippets: Store as text with syntax highlighting metadata
 - File references: Store path reference only, not content
-
-**E5. Attachment Cleanup**
-- Implement garbage collection for orphaned attachments
-- Run periodic cleanup job (delete attachments not referenced in DB)
-- Add manual cleanup command
-- Respect retention policy (keep for N days after thread deletion)
 
 ---
 
