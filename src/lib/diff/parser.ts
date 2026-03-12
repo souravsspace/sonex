@@ -1,5 +1,5 @@
 import { parsePatch } from "diff";
-import type { DiffHunk, DiffLine, FileDiff } from "./diff-types";
+import type { DiffHunk, DiffLine, FileDiff } from "./types";
 
 const BINARY_FILE_REGEX = /Binary files? .* differ/;
 const RENAME_FROM_REGEX = /^rename from (.+)$/m;

@@ -1,4 +1,4 @@
-import type { DiffTreeNode, FileDiff } from "./diff-types";
+import type { DiffTreeNode, FileDiff } from "./types";
 
 /**
  * Convert flat FileDiff array into hierarchical tree for rendering

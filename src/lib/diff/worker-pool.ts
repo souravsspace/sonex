@@ -1,8 +1,4 @@
-import type {
-  DiffWorkerRequest,
-  DiffWorkerResponse,
-  FileDiff,
-} from "./diff-types";
+import type { DiffWorkerRequest, DiffWorkerResponse, FileDiff } from "./types";
 
 interface PendingRequest {
   reject: (error: Error) => void;

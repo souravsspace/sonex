@@ -1,4 +1,4 @@
-import type { FileDiff } from "./diff-types";
+import type { FileDiff } from "./diff/types";
 
 /**
  * Active chat session state

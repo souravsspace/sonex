@@ -1,5 +1,5 @@
-import { parseUnifiedDiff } from "@/lib/diff-parser";
-import type { DiffWorkerRequest, DiffWorkerResponse } from "@/lib/diff-types";
+import { parseUnifiedDiff } from "@/lib/diff/parser";
+import type { DiffWorkerRequest, DiffWorkerResponse } from "@/lib/diff/types";
 
 self.onmessage = (event: MessageEvent<DiffWorkerRequest>) => {
   const { id, type, payload } = event.data;
