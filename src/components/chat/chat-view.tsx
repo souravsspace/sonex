@@ -3,10 +3,9 @@
  * Main container that orchestrates messages and composer
  */
 
-import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ComposerPromptEditor } from "@/components/composer/composer-prompt-editor";
-import { fetchMessages, sendMessage } from "@/lib/mock-api";
-import type { Message } from "@/lib/models";
+import { messageApi } from "@/lib/native-api";
 import { ChatMessageList } from "./chat-message-list";
 
 interface ChatViewProps {
@@ -14,55 +13,57 @@ interface ChatViewProps {
 }
 
 export function ChatView({ threadId }: ChatViewProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
-  const [isSending, setIsSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  // Load messages when thread changes
-  useEffect(() => {
-    async function loadMessages() {
-      setIsLoadingMessages(true);
-      setError(null);
-      try {
-        const data = await fetchMessages(threadId);
-        setMessages(data);
-      } catch (err) {
-        setError("Failed to load messages");
-        console.error("Error loading messages:", err);
-      } finally {
-        setIsLoadingMessages(false);
-      }
-    }
+  // Fetch messages for this thread
+  const {
+    data: messages = [],
+    isLoading: isLoadingMessages,
+    error: messagesError,
+  } = useQuery({
+    queryKey: ["messages", threadId],
+    queryFn: () => messageApi.list(threadId),
+    enabled: !!threadId,
+  });
 
-    loadMessages();
-  }, [threadId]);
+  // Send message mutation
+  const sendMessageMutation = useMutation({
+    mutationFn: (data: {
+      content: string;
+      mentions: Array<{ path: string }>;
+      attachments: Array<{ filePath: string }>;
+    }) =>
+      messageApi.send({
+        threadId,
+        content: data.content,
+        attachments: data.attachments.map((a) => ({
+          id: crypto.randomUUID(),
+          filePath: a.filePath,
+          fileName: a.filePath.split("/").pop() || "unknown",
+          mimeType: "application/octet-stream", // TODO: Detect proper MIME type
+          size: 0, // TODO: Get actual file size
+        })),
+      }),
+    onSuccess: () => {
+      // Invalidate messages query to refetch
+      queryClient.invalidateQueries({
+        queryKey: ["messages", threadId],
+      });
+    },
+  });
 
-  const handleSubmit = async (data: {
+  const handleSubmit = (data: {
     content: string;
     mentions: Array<{ path: string }>;
     attachments: Array<{ filePath: string }>;
   }) => {
-    setIsSending(true);
-    setError(null);
-
-    try {
-      const { userMessage, assistantMessage } = await sendMessage(
-        threadId,
-        data.content,
-        data.mentions,
-        data.attachments
-      );
-
-      // Add messages to list
-      setMessages((prev) => [...prev, userMessage, assistantMessage]);
-    } catch (err) {
-      setError("Failed to send message");
-      console.error("Error sending message:", err);
-    } finally {
-      setIsSending(false);
-    }
+    sendMessageMutation.mutate(data);
   };
+
+  const error = messagesError || sendMessageMutation.error;
+  const errorMessage =
+    error instanceof Error ? error.message : "An error occurred";
+  const isSending = sendMessageMutation.isPending;
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
@@ -70,10 +71,10 @@ export function ChatView({ threadId }: ChatViewProps) {
       {error && (
         <div className="shrink-0 border-destructive/20 border-b bg-destructive/10 px-6 py-3">
           <div className="flex items-center justify-between text-destructive text-sm">
-            <span>{error}</span>
+            <span>{errorMessage}</span>
             <button
               className="text-xs hover:underline"
-              onClick={() => setError(null)}
+              onClick={() => sendMessageMutation.reset()}
               type="button"
             >
               Dismiss
