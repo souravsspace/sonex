@@ -4,10 +4,10 @@
  */
 
 import { useEffect, useState } from "react";
+import { ComposerPromptEditor } from "@/components/composer/composer-prompt-editor";
 import { fetchMessages, sendMessage } from "@/lib/mock-api";
 import type { Message } from "@/lib/models";
 import { ChatMessageList } from "./chat-message-list";
-import { ComposerPromptEditor } from "./composer-prompt-editor";
 
 interface ChatViewProps {
   threadId: string;
