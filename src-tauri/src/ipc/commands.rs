@@ -1,6 +1,6 @@
 // Tauri Command Handlers - IPC command implementations
-use tauri::State;
 use crate::ipc::types::*;
+use tauri::State;
 
 // ============================================================================
 // Application State (placeholder - will be implemented in Phase 2.2)
@@ -63,10 +63,7 @@ pub async fn thread_list(
 }
 
 #[tauri::command]
-pub async fn thread_get(
-    thread_id: String,
-    _state: State<'_, AppState>,
-) -> Result<Thread, String> {
+pub async fn thread_get(thread_id: String, _state: State<'_, AppState>) -> Result<Thread, String> {
     // TODO: Implement thread retrieval
     Err(format!("Thread not found: {}", thread_id))
 }
@@ -88,10 +85,7 @@ pub async fn thread_create(
 }
 
 #[tauri::command]
-pub async fn thread_delete(
-    thread_id: String,
-    _state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn thread_delete(thread_id: String, _state: State<'_, AppState>) -> Result<(), String> {
     // TODO: Implement thread deletion
     Ok(())
 }
@@ -176,10 +170,7 @@ pub async fn git_branch(
 }
 
 #[tauri::command]
-pub async fn git_commit(
-    request: CommitParams,
-    _state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn git_commit(request: CommitParams, _state: State<'_, AppState>) -> Result<(), String> {
     // TODO: Implement git commit
     Ok(())
 }

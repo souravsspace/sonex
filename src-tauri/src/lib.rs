@@ -19,33 +19,27 @@ pub fn run() {
             ipc::project_list,
             ipc::project_get,
             ipc::project_create,
-            
             // Thread commands
             ipc::thread_list,
             ipc::thread_get,
             ipc::thread_create,
             ipc::thread_delete,
-            
             // Message commands
             ipc::message_send,
             ipc::message_list,
-            
             // Workspace commands
             ipc::workspace_get_entries,
             ipc::workspace_read_file,
             ipc::workspace_write_file,
-            
             // Git commands
             ipc::git_status,
             ipc::git_branch,
             ipc::git_commit,
-            
             // Terminal commands
             ipc::terminal_create,
             ipc::terminal_input,
             ipc::terminal_resize,
             ipc::terminal_close,
-            
             // Settings commands
             ipc::settings_get,
             ipc::settings_update,
