@@ -15,6 +15,21 @@ Do **not** batch changes together and commit at the end. Each individual change 
 
 <strong>
 All file names should be in snake-case and use mcp as you needed.
+
+As you work, keep the file and folder structure clean and organized at all times. This means:
+
+- **Place every file in the right folder** — don't dump files in the root or wrong directory. Group related files logically (e.g. components/, utils/, assets/, etc.)
+- **Rename files clearly** — file names should describe what they do. No `file1.js`, `test2.py`, `newfile.txt`.
+- **Create folders as needed** — if a new category of files emerges, make a folder for it on the spot, don't wait.
+- **Move misplaced files immediately** — if you notice a file is in the wrong place while working, move it right then and commit it.
+- **After every move, rename, or restructure**, run:
+
+```
+git add -A
+git commit -m "organize: descriptive message of what you moved/renamed/restructured"
+```
+
+Do **not** leave organizing for the end. Every structural change gets its own commit, immediately after you make it.
 </strong>
 
 ## Quick Commands
