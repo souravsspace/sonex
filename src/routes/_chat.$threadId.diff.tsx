@@ -1,7 +1,7 @@
 // biome-ignore lint/style/useFilenamingConvention: TanStack Router requires $ prefix for dynamic route params
 import { createFileRoute } from "@tanstack/react-router";
-import { DiffPanel } from "@/components/diff-panel";
-import { DiffToolbar } from "@/components/diff-toolbar";
+import { DiffPanel } from "@/components/diff/diff-panel";
+import { DiffToolbar } from "@/components/diff/diff-toolbar";
 
 export const Route = createFileRoute("/_chat/$threadId/diff")({
   component: DiffRoute,
