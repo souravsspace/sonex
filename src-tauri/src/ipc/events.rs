@@ -1,6 +1,6 @@
 // Event Emitter System - Backend→Frontend event notifications
 use crate::ipc::types::*;
-use tauri::{Manager, Window};
+use tauri::{Emitter, Manager, Window};
 
 // ============================================================================
 // Event Emitter Functions
