@@ -80,7 +80,6 @@ export function useIPCEvent<K extends keyof IPCEvents>(
         unlisten = fn;
       })
       .catch((error) => {
-        // biome-ignore lint/suspicious/noConsole: Error logging for event setup failures
         console.error(
           `Failed to setup event listener for ${eventName as string}:`,
           error

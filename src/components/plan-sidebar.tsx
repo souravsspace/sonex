@@ -1,3 +1,4 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { PlusIcon, SettingsIcon, ThreadIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -15,26 +16,54 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { projectApi, threadApi } from "@/lib/native-api";
 
 interface PlanSidebarProps {
   activeThreadId?: string;
 }
 
-// TODO: Placeholder thread data — replaced by store data in Task 03
-const PLACEHOLDER_THREADS = [
-  { id: "thread-1", title: "Implement auth flow", updatedAt: "2 hours ago" },
-  { id: "thread-2", title: "Fix navigation bug", updatedAt: "Yesterday" },
-  { id: "thread-3", title: "Add dark mode", updatedAt: "3 days ago" },
-];
-
 function PlanSidebar({ activeThreadId }: PlanSidebarProps) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  // Fetch projects (for now, we'll use the first project)
+  const { data: projects = [] } = useQuery({
+    queryKey: ["projects"],
+    queryFn: () => projectApi.list(),
+  });
+
+  const currentProjectId = projects[0]?.id;
+
+  // Fetch threads for the current project
+  const { data: threads = [], isLoading: threadsLoading } = useQuery({
+    queryKey: ["threads", currentProjectId],
+    queryFn: () => threadApi.list(currentProjectId),
+    enabled: !!currentProjectId,
+  });
+
+  // Create new thread mutation
+  const createThreadMutation = useMutation({
+    mutationFn: () => {
+      if (!currentProjectId) {
+        throw new Error("No project selected");
+      }
+      return threadApi.create({
+        projectId: currentProjectId,
+        title: "New Thread",
+      });
+    },
+    onSuccess: (newThread) => {
+      // Invalidate threads query to refetch
+      queryClient.invalidateQueries({
+        queryKey: ["threads", currentProjectId],
+      });
+      // Navigate to the new thread
+      navigate({ to: "/$threadId", params: { threadId: newThread.id } });
+    },
+  });
 
   const handleNewThread = () => {
-    // TODO: Remove placeholder navigation — wire to Tauri IPC in Task 04
-    navigate({
-      to: "/",
-    });
+    createThreadMutation.mutate();
   };
 
   return (
@@ -68,20 +97,35 @@ function PlanSidebar({ activeThreadId }: PlanSidebarProps) {
           <SidebarGroupLabel>Recent</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {PLACEHOLDER_THREADS.map((thread) => (
-                <SidebarMenuItem key={thread.id}>
-                  <SidebarMenuButton
-                    isActive={activeThreadId === thread.id}
-                    render={
-                      <Link params={{ threadId: thread.id }} to="/$threadId" />
-                    }
-                    tooltip={thread.title}
-                  >
-                    <ThreadIcon size={14} />
-                    <span className="truncate">{thread.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {threadsLoading && (
+                <div className="px-3 py-2 text-muted-foreground text-xs">
+                  Loading threads...
+                </div>
+              )}
+              {!threadsLoading && threads.length === 0 && (
+                <div className="px-3 py-2 text-muted-foreground text-xs">
+                  No threads yet. Create one to get started.
+                </div>
+              )}
+              {!threadsLoading &&
+                threads.length > 0 &&
+                threads.map((thread) => (
+                  <SidebarMenuItem key={thread.id}>
+                    <SidebarMenuButton
+                      isActive={activeThreadId === thread.id}
+                      render={
+                        <Link
+                          params={{ threadId: thread.id }}
+                          to="/$threadId"
+                        />
+                      }
+                      tooltip={thread.title}
+                    >
+                      <ThreadIcon size={14} />
+                      <span className="truncate">{thread.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

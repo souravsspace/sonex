@@ -41,7 +41,6 @@ class NativeAPI {
       }
       return await invoke(command, { request });
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: Error logging for IPC failures
       console.error(`IPC call failed: ${command}`, error);
       throw error;
     }
