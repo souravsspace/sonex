@@ -1,0 +1,27 @@
+{
+	"name": "sonex-monorepo",
+	"private": true,
+	"version": "0.1.0",
+	"packageManager": "bun@1.1.38",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "turbo run dev",
+		"build": "turbo run build",
+		"check-types": "turbo run check-types",
+		"fix": "turbo run fix",
+		"check": "turbo run check",
+		"clean": "turbo run clean",
+		"tauri": "bun --filter desktop tauri",
+		"tauri:dev": "bun --filter desktop tauri:dev",
+		"tauri:build": "bun --filter desktop tauri:build"
+	},
+	"devDependencies": {
+		"turbo": "^2.3.3"
+	},
+	"engines": {
+		"node": ">=22"
+	}
+}

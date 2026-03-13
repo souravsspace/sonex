@@ -1,5 +1,5 @@
 {
-  "name": "sonex",
+  "name": "desktop",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -10,8 +10,10 @@
     "tauri": "tauri",
     "tauri:dev": "bun tauri dev",
     "tauri:build": "bun tauri build",
+    "check-types": "tsc --noEmit",
     "check": "ultracite check",
-    "fix": "ultracite fix"
+    "fix": "ultracite fix",
+    "clean": "rm -rf dist .turbo node_modules"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
