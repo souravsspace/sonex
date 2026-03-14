@@ -2,6 +2,10 @@
   "name": "sonex",
   "private": true,
   "version": "0.1.0",
+  "author": {
+    "name": "Sourav Ukil",
+    "email": "savory@souravsspace.dev"
+  },
   "packageManager": "bun@1.1.38",
   "workspaces": [
     "apps/*",
