@@ -1,0 +1,12 @@
+{
+  "extends": "@sonex/typescript-config/packages.json",
+  "compilerOptions": {
+    "paths": {
+      "@sonex/utils/*": ["../utils/*"],
+      "@sonex/db/*": ["../db/*"]
+    },
+    "strictNullChecks": true
+  },
+  "include": ["../utils/**/*.ts", "../utils/**/*.tsx"],
+  "exclude": ["../utils/node_modules"]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@sonex/utils",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "types:check": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@sonex/db": "workspace:*",
+    "hono": "^4.11.4",
+    "zod": "^4.1.12",
+    "pino": "^10.0.0",
+    "pino-pretty": "^13.1.1",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "@sonex/typescript-config": "workspace:*",
+    "tsup": "^8.5.0"
+  }
+}
