@@ -1,0 +1,18 @@
+{
+  "name": "@sonex/vitest-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf dist && tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "vitest": "^2.1.8"
+  },
+  "devDependencies": {
+    "@sonex/typescript-config": "workspace:*",
+    "typescript": "5.7.3",
+    "tsup": "^8.5.0"
+  }
+}
