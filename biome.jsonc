@@ -4,7 +4,19 @@
   "linter": {
     "rules": {
       "style": {
-        "useFilenamingConvention": "info"
+        "useFilenamingConvention": "info",
+        "useConsistentTypeDefinitions": "off",
+        "noEnum": "off"
+      },
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off",
+        "noNamespaceImport": "off"
+      },
+      "suspicious": {
+        "noConstantBinaryExpressions": "off"
       }
     }
   }
