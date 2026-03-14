@@ -1,0 +1,11 @@
+{
+  "extends": "@sonex/typescript-config/packages.json",
+  "compilerOptions": {
+    "paths": {
+      "@sonex/db/*": ["drizzle/*"]
+    },
+    "strictNullChecks": true
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
