@@ -1,0 +1,14 @@
+{
+  "extends": "@sonex/typescript-config/packages.json",
+  "compilerOptions": {
+    "paths": {
+      "@/": ["./src/*"],
+      "@sonex/utils/*": ["../utils/*"],
+      "@sonex/db/*": ["../db/*"],
+      "#pkg": ["../../package.json"]
+    },
+    "strictNullChecks": true,
+    "jsx": "react-jsx"
+  },
+  "exclude": ["node_modules"]
+}

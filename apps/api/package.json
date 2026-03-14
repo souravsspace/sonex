@@ -1,0 +1,38 @@
+{
+  "name": "api",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env.local src/server.ts",
+    "dev:tsup": "tsup --watch",
+    "dev:node": "tsx watch --env-file=.env.local src/server.ts",
+    "build:tsup": "tsup",
+    "build:tsc": "tsc",
+    "build": "rm -rf dist && tsup",
+    "start": "node dist/server.cjs",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "types:check": "tsc --noEmit --emitDeclarationOnly false",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@sonex/utils": "workspace:*",
+    "@sonex/db": "workspace:*",
+    "@hono/node-server": "^1.19.6",
+    "@t3-oss/env-core": "^0.13.8",
+    "date-fns": "^4.1.0",
+    "hono": "^4.11.4",
+    "react": "^19.1.1",
+    "typescript": "^5.9.2",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@sonex/typescript-config": "workspace:*",
+    "@sonex/vitest-config": "workspace:*",
+    "@types/node": "^20.19.9",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "tsup": "^8.5.0",
+    "tsx": "^4.7.1",
+    "vite-tsconfig-paths": "^6.0.3",
+    "vitest": "^2.1.8"
+  }
+}
